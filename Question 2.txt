@@ -1,0 +1,22 @@
+2) Explain the design pattern used in following:
+    interface Vehicle {
+        int set_num_of_wheels()
+        int set_num_of_passengers()
+        boolean has_gas()
+    }
+a) Explain how can you use the pattern to create car and plane class?
+b) Use a different design pattern for this solution.
+
+Answer: 
+a) 
+The design pattern used in this is factory method. A car and a plane class can be created by extending
+the Vehicle interface to the car and plane class.
+
+public class Car extends Vehicle{
+    .....
+}
+public class Plane extends Vehicle{
+    .....
+}
+
+b) Abstract Factory can also be used for this solutionm, it lets you produce families of related objects without specifying their concrete classes.

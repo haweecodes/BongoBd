@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://kit.fontawesome.com/235c205d78.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  .container {
+    display: flex;
+    background: white;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .video {
+    width: 100%;
+  }
+
+  .c-video {
+    width: 100%;
+    max-width: 800px;
+    position: relative;
+  }
+
+  .video--controls {
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    background: transparent;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+  }
+
+  #play-pause,
+  #volume,
+  #rewind,
+  #expand,
+  #backward,
+  #forward {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+  }
+
+  .controls--button {
+    width: 100%;
+  }
+
+  .control-left {
+    float: left;
+    height: 100%;
+  }
+
+  .control-right {
+    float: right;
+    height: 100%;
+  }
+
+  .controls--barContainer {
+    padding: 10px 0px;
+    width: 100%;
+  }
+
+  #controls-flow {
+    height: 10px;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+
+  #controls-play-progress {
+    width: 0%;
+    height: 10px;
+    background-color: orangered;
+  }
+</style>
+
+<body>
+  <div class="container">
+    <div class="c-video">
+      <input type="file" id="fileUpload" onchange="upFile(this)">
+      <video id="video" class="video">
+        <source src="" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      <div class="video--controls">
+        <div class="controls--barContainer">
+          <div id="controls-flow">
+            <div id="controls-play-progress">
+            </div>
+          </div>
+        </div>
+        <div class="controls--button">
+          <div class="control-left">
+            <button id="play-pause" onclick="playPause()"><i id="play" class="fas fa-play"></i></button>
+            <button id="backward" onclick="forBack(0)"><i class="fas fa-step-backward"></i></button>
+            <button id="forward" onclick="forBack(1)"><i class="fas fa-step-forward"></i></button>
+          </div>
+          <div class="control-right">
+            <button id="rewind" onclick="rewind()"><i class="fas fa-undo-alt"></i></button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+<script>
+
+  var player = document.getElementById("video");
+  var repeat = false
+
+  //function to take input a file from desktop and play
+  function upFile(input) {
+    if (input.files && input.files[0]) {
+      var file = input.files[0];
+      var url = URL.createObjectURL(file);
+      var reader = new FileReader();
+      reader.onload = function () {
+        player.src = url;
+        playPause();
+      }
+      reader.readAsDataURL(file);
+    }
+  }
+
+  // state pattern is used for the playpause function because it changes its behavior depending on its internal states
+
+  // pseudocode
+  // function playPause(){
+  //   if the state of the player is paused 
+  //     change the state to play 
+  //     change the icon to pause
+  //     get the progress bar element
+  //     and set the interval for the progress bar by calling the frame function
+  //   end
+  //   else
+  //     pause the player 
+  //     change the icon
+  // } 
+  function playPause() {
+    if (player.paused) {
+      player.play();
+      document.getElementById('play').className = "fas fa-pause";
+
+      // progress bar show
+      var elem = document.getElementById("controls-play-progress");
+      var id = setInterval(frame, 1000);
+      function frame() {
+        let vidDu = Math.floor((100 / player.duration) * player.currentTime);
+        elem.style.width = vidDu + '%';
+        if (vidDu === 100) {
+          clearInterval(id)
+          player.pause();
+          document.getElementById('play').className = "fas fa-play";
+        }
+      }
+    }
+    else {
+      player.pause();
+      document.getElementById('play').className = "fas fa-play";
+    }
+  }
+
+  //pseudocode
+  // function forback(argument){
+  //   store current time to time variable
+  //   if argument is equals 1 
+  //     then add 5 sec to time variable
+  //     end
+  //   else 
+  //     subtract 5 sec to time variable
+  //     end
+  //   assign to current time the time variable
+  // }
+  function forBack(num) {
+    let curTime = player.currentTime
+    if (num === 1) {
+      curTime += 5
+    } else {
+      curTime -= 5
+    }
+    player.currentTime = curTime
+  }
+
+  // pseudocode
+  // function rewind(){
+  //   reset current time by adding 0 to it
+  // }
+  function rewind() {
+    player.currentTime = 0
+  }
+
+</script>
+
+</html>
