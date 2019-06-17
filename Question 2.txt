@@ -12,11 +12,20 @@ a)
 The design pattern used in this is factory method. A car and a plane class can be created by extending
 the Vehicle interface to the car and plane class.
 
-public class Car extends Vehicle{
+class Car extends Vehicle{
     .....
 }
-public class Plane extends Vehicle{
+class Plane extends Vehicle{
     .....
 }
 
-b) Abstract Factory can also be used for this solutionm, it lets you produce families of related objects without specifying their concrete classes.
+b) Builder pattern can also be used for this solution, it is a creational design pattern that lets you construct complex objects step by step.
+    interface Vehicle {
+        int  set_num_of_wheels()
+        int  set_num_of_passengers()
+        boolean  has_gas()
+    }
+
+class CarBuilder extends Vehicle{
+        ...
+}
